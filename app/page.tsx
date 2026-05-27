@@ -150,12 +150,12 @@ export default function NorfolkSuffolkPropertyCare() {
               Contact
             </a>
           </nav>
-          <Button
-            asChild
-            className="rounded-full bg-emerald-500 font-semibold text-white hover:bg-emerald-600"
+          <a
+            href="tel:07443763926"
+            className="rounded-full bg-emerald-500 px-5 py-2.5 font-semibold text-white hover:bg-emerald-600"
           >
-            <a href="tel:07443763926">Call Now</a>
-          </Button>
+            Call Now
+          </a>
         </div>
       </header>
 
