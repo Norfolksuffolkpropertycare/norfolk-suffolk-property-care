@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Phone,
@@ -91,6 +91,26 @@ const whyChooseUs = [
 ];
 
 export default function NorfolkSuffolkPropertyCare() {
+  const [formData, setFormData] = useState({
+    name: "",
+    contact: "",
+    service: "Garden maintenance",
+    details: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = `Quote Request: ${formData.service}`;
+    const body = `Name: ${formData.name}
+Contact: ${formData.contact}
+Service Required: ${formData.service}
+
+Job Details:
+${formData.details}`;
+    
+    window.location.href = `mailto:norfolksuffolkpropertycare@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900">
       <header className="fixed top-0 z-50 w-full border-b border-stone-200 bg-white/85 backdrop-blur-xl">
@@ -411,7 +431,7 @@ export default function NorfolkSuffolkPropertyCare() {
             </div>
             <Card className="rounded-[2rem] border-stone-700 bg-stone-700 text-white shadow-2xl">
               <CardContent className="p-7">
-                <form className="grid gap-5">
+                <form onSubmit={handleSubmit} className="grid gap-5">
                   <div className="grid gap-2">
                     <label className="text-sm font-semibold text-stone-200">
                       Name
@@ -419,6 +439,9 @@ export default function NorfolkSuffolkPropertyCare() {
                     <input
                       className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
                       placeholder="Your name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
                     />
                   </div>
                   <div className="grid gap-2">
@@ -428,13 +451,20 @@ export default function NorfolkSuffolkPropertyCare() {
                     <input
                       className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
                       placeholder="Best way to contact you"
+                      value={formData.contact}
+                      onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                      required
                     />
                   </div>
                   <div className="grid gap-2">
                     <label className="text-sm font-semibold text-stone-200">
                       What do you need?
                     </label>
-                    <select className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white outline-none ring-emerald-400 focus:ring-2">
+                    <select 
+                      className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white outline-none ring-emerald-400 focus:ring-2"
+                      value={formData.service}
+                      onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                    >
                       <option>Garden maintenance</option>
                       <option>Hedge cutting</option>
                       <option>Pressure washing</option>
@@ -450,17 +480,19 @@ export default function NorfolkSuffolkPropertyCare() {
                     <textarea
                       className="min-h-32 rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
                       placeholder="Tell us what needs doing, your area, and any useful details"
+                      value={formData.details}
+                      onChange={(e) => setFormData({ ...formData, details: e.target.value })}
+                      required
                     />
                   </div>
                   <Button
-                    type="button"
+                    type="submit"
                     className="rounded-full bg-emerald-500 py-6 text-base font-bold text-white hover:bg-emerald-600"
                   >
                     Send Quote Request
                   </Button>
                   <p className="text-xs leading-6 text-stone-400">
-                    Form placeholder: connect this to email, WhatsApp, Facebook
-                    Messenger or a website form service when the site goes live.
+                    This will open your email app with the details pre-filled.
                   </p>
                 </form>
               </CardContent>
