@@ -430,7 +430,9 @@ export default function NorfolkSuffolkPropertyCare() {
                   norfolksuffolkpropertycare@gmail.com
                 </a>
                 <a
-                  href="https://www.facebook.com/"
+                  href="https://www.facebook.com/profile.php?id=61590323915814"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-3 rounded-2xl bg-white/10 p-4 hover:bg-white/15"
                 >
                   <MessageCircle className="h-5 w-5 text-emerald-400" /> Message
