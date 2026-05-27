@@ -95,9 +95,11 @@ export default function NorfolkSuffolkPropertyCare() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("[v0] Form submit started");
     setFormStatus("submitting");
     
     const formData = new FormData(e.currentTarget);
+    console.log("[v0] Form data entries:", Object.fromEntries(formData.entries()));
     
     try {
       const response = await fetch("https://formspree.io/f/mzdwygqd", {
@@ -108,13 +110,18 @@ export default function NorfolkSuffolkPropertyCare() {
         },
       });
       
+      console.log("[v0] Response status:", response.status);
+      
       if (response.ok) {
         setFormStatus("success");
         e.currentTarget.reset();
       } else {
+        const errorData = await response.json();
+        console.log("[v0] Error response:", errorData);
         setFormStatus("error");
       }
-    } catch {
+    } catch (err) {
+      console.log("[v0] Fetch error:", err);
       setFormStatus("error");
     }
   };
