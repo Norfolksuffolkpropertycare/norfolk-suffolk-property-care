@@ -91,35 +91,32 @@ const whyChooseUs = [
 ];
 
 export default function NorfolkSuffolkPropertyCare() {
-  const [formData, setFormData] = useState({
-    name: "",
-    contact: "",
-    service: "Garden maintenance",
-    details: "",
-  });
+  const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("[v0] Form submitted with data:", formData);
-    const subject = `Quote Request: ${formData.service}`;
-    const body = `Name: ${formData.name}
-Contact: ${formData.contact}
-Service Required: ${formData.service}
-
-Job Details:
-${formData.details}`;
+    setFormStatus("submitting");
     
-    const mailtoLink = `mailto:norfolksuffolkpropertycare@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    console.log("[v0] Mailto link:", mailtoLink);
+    const formData = new FormData(e.currentTarget);
     
-    // Create a temporary link and click it to open email client
-    const link = document.createElement("a");
-    link.href = mailtoLink;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      const response = await fetch("https://formspree.io/f/xwpowgkk", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      
+      if (response.ok) {
+        setFormStatus("success");
+        e.currentTarget.reset();
+      } else {
+        setFormStatus("error");
+      }
+    } catch {
+      setFormStatus("error");
+    }
   };
 
   return (
@@ -442,70 +439,81 @@ ${formData.details}`;
             </div>
             <Card className="rounded-[2rem] border-stone-700 bg-stone-700 text-white shadow-2xl">
               <CardContent className="p-7">
-                <form onSubmit={handleSubmit} className="grid gap-5">
-                  <div className="grid gap-2">
-                    <label className="text-sm font-semibold text-stone-200">
-                      Name
-                    </label>
-                    <input
-                      className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
-                      placeholder="Your name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                    />
+                {formStatus === "success" ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500">
+                      <CheckCircle className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold">Thank you!</h3>
+                    <p className="mt-2 text-stone-300">
+                      Your quote request has been sent. We&apos;ll get back to you as soon as possible.
+                    </p>
                   </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-semibold text-stone-200">
-                      Phone or email
-                    </label>
-                    <input
-                      className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
-                      placeholder="Best way to contact you"
-                      value={formData.contact}
-                      onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-semibold text-stone-200">
-                      What do you need?
-                    </label>
-                    <select 
-                      className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white outline-none ring-emerald-400 focus:ring-2"
-                      value={formData.service}
-                      onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                ) : (
+                  <form onSubmit={handleSubmit} className="grid gap-5">
+                    <div className="grid gap-2">
+                      <label className="text-sm font-semibold text-stone-200">
+                        Name
+                      </label>
+                      <input
+                        name="name"
+                        className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
+                        placeholder="Your name"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <label className="text-sm font-semibold text-stone-200">
+                        Phone or email
+                      </label>
+                      <input
+                        name="contact"
+                        className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
+                        placeholder="Best way to contact you"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <label className="text-sm font-semibold text-stone-200">
+                        What do you need?
+                      </label>
+                      <select 
+                        name="service"
+                        className="rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white outline-none ring-emerald-400 focus:ring-2"
+                      >
+                        <option>Garden maintenance</option>
+                        <option>Hedge cutting</option>
+                        <option>Pressure washing</option>
+                        <option>Gutter clearing</option>
+                        <option>Property maintenance</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                    <div className="grid gap-2">
+                      <label className="text-sm font-semibold text-stone-200">
+                        Job details
+                      </label>
+                      <textarea
+                        name="details"
+                        className="min-h-32 rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
+                        placeholder="Tell us what needs doing, your area, and any useful details"
+                        required
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      disabled={formStatus === "submitting"}
+                      className="rounded-full bg-emerald-500 py-6 text-base font-bold text-white hover:bg-emerald-600 disabled:opacity-50"
                     >
-                      <option>Garden maintenance</option>
-                      <option>Hedge cutting</option>
-                      <option>Pressure washing</option>
-                      <option>Gutter clearing</option>
-                      <option>Property maintenance</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                  <div className="grid gap-2">
-                    <label className="text-sm font-semibold text-stone-200">
-                      Job details
-                    </label>
-                    <textarea
-                      className="min-h-32 rounded-2xl border border-stone-600 bg-stone-800 px-4 py-3 text-white placeholder:text-stone-400 outline-none ring-emerald-400 focus:ring-2"
-                      placeholder="Tell us what needs doing, your area, and any useful details"
-                      value={formData.details}
-                      onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="rounded-full bg-emerald-500 py-6 text-base font-bold text-white hover:bg-emerald-600"
-                  >
-                    Send Quote Request
-                  </Button>
-                  <p className="text-xs leading-6 text-stone-400">
-                    This will open your email app with the details pre-filled.
-                  </p>
-                </form>
+                      {formStatus === "submitting" ? "Sending..." : "Send Quote Request"}
+                    </Button>
+                    {formStatus === "error" && (
+                      <p className="text-sm text-red-400">
+                        Something went wrong. Please try again or contact us directly.
+                      </p>
+                    )}
+                  </form>
+                )}
               </CardContent>
             </Card>
           </div>
