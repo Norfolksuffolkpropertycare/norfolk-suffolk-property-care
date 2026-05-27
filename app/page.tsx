@@ -100,6 +100,7 @@ export default function NorfolkSuffolkPropertyCare() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("[v0] Form submitted with data:", formData);
     const subject = `Quote Request: ${formData.service}`;
     const body = `Name: ${formData.name}
 Contact: ${formData.contact}
@@ -109,6 +110,7 @@ Job Details:
 ${formData.details}`;
     
     const mailtoLink = `mailto:norfolksuffolkpropertycare@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    console.log("[v0] Mailto link:", mailtoLink);
     
     // Create a temporary link and click it to open email client
     const link = document.createElement("a");
