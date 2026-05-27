@@ -108,7 +108,16 @@ Service Required: ${formData.service}
 Job Details:
 ${formData.details}`;
     
-    window.location.href = `mailto:norfolksuffolkpropertycare@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:norfolksuffolkpropertycare@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Create a temporary link and click it to open email client
+    const link = document.createElement("a");
+    link.href = mailtoLink;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
