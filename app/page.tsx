@@ -503,13 +503,13 @@ export default function NorfolkSuffolkPropertyCare() {
                         required
                       />
                     </div>
-                    <Button
+                    <button
                       type="submit"
                       disabled={formStatus === "submitting"}
-                      className="rounded-full bg-emerald-500 py-6 text-base font-bold text-white hover:bg-emerald-600 disabled:opacity-50"
+                      className="w-full rounded-full bg-emerald-500 py-4 text-base font-bold text-white hover:bg-emerald-600 disabled:opacity-50"
                     >
                       {formStatus === "submitting" ? "Sending..." : "Send Quote Request"}
-                    </Button>
+                    </button>
                     {formStatus === "error" && (
                       <p className="text-sm text-red-400">
                         Something went wrong. Please try again or contact us directly.
